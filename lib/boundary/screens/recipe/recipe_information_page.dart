@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/boundary/widgets/recipe_favorite_button.dart';
 import 'package:foodapp/entity/recipe.dart';
 
 class RecipeInformationPage extends StatelessWidget {
@@ -17,7 +18,7 @@ class RecipeInformationPage extends StatelessWidget {
         backgroundColor: Colors.orange,
         title: const Text("Results"),
         actions: <Widget>[
-          IconButton(onPressed: () => {}, icon: const Icon(Icons.star)),
+          RecipeFavoriteButton(recipe: recipe, color: Colors.white),
         ],
       ),
       body: ListView(
@@ -162,8 +163,8 @@ class RecipeInformationPage extends StatelessWidget {
   }
 }
 
-List<Widget> _instructionsList(List<String> instructions) {
+List<Widget> _instructionsList(List<dynamic> instructions) {
   return instructions
-      .map((e) => Text(e, style: const TextStyle(fontSize: 18.0)))
+      .map((e) => Text(e.toString(), style: const TextStyle(fontSize: 18.0)))
       .toList();
 }

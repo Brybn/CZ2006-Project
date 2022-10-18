@@ -58,19 +58,4 @@ class _RecipePageState extends State<RecipePage> {
       ),
     );
   }
-
-  Widget _filterCategory(String name) {
-    return ExpansionTile(
-      key: PageStorageKey(name),
-      maintainState: true,
-      title: Text(name),
-      children: [
-        IngredientFilter(
-          onTap: (filters) => setState(() {
-            _ingredientFilters = filters;
-          }),
-        ),
-      ],
-    );
-  }
 }

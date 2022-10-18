@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foodapp/boundary/screens/restaurants_result.dart';
+import 'package:foodapp/boundary/screens/restaurant/restaurant_results_page.dart';
 import 'package:location/location.dart';
 
 import 'package:foodapp/boundary/widgets/MultiSelectChip.dart';
 
 class RestaurantPage extends StatefulWidget {
-  const RestaurantPage({
-    Key key,
-    @required User user,
-  })
-      : _user = user,
-        super(key: key);
-  final User _user;
+  const RestaurantPage({Key key}) : super(key: key);
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
-  User _user;
   Location location = Location();
   LocationData _locationData;
 
   @override
   void initState() {
-    _user = widget._user;
     super.initState();
     getLoc();
   }
@@ -49,7 +40,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
         return;
       }
     }
-
     _locationData = await location.getLocation();
   }
 
@@ -160,17 +150,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          RestaurantResult(
-                            resCuisine: dropdownValue,
-                            resPreference: selectedReportList,
-                            resCurrentRangeValue: _currentRangeValues,
-                            resLatitude: _locationData.latitude,
-                            resLongitude: _locationData.longitude,
-                            user: _user,
-                          ),
-                    )
-                );
+                      builder: (context) => RestaurantResultsPage(
+                        resCuisine: dropdownValue,
+                        resPreference: selectedReportList,
+                        resCurrentRangeValue: _currentRangeValues,
+                        resLatitude: _locationData.latitude,
+                        resLongitude: _locationData.longitude,
+                      ),
+                    ));
               },
               child: const Center(
                 child: Text(

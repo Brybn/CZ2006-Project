@@ -9,15 +9,13 @@ class LoginPage extends StatelessWidget {
   const LoginPage({
     Key key,
     @required this.onSignIn,
-    @required this.auth,
   }) : super(key: key);
 
-  final Authentication auth;
   final void Function(User) onSignIn;
 
   Future<void> _signInWithGoogle() async {
     try {
-      final user = await auth.signInWithGoogle();
+      final user = await Authentication.signInWithGoogle();
       onSignIn(user);
     } catch (e) {
       print(e.toString());

@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodapp/boundary/screens/login_page.dart';
-import 'package:foodapp/control/authentication.dart';
-
 import 'home_page.dart';
 
 class LandingPage extends StatefulWidget {
-  const LandingPage({Key key, @required this.auth}) : super(key: key);
-  final Authentication auth;
+  LandingPage({Key key}) : super(key: key);
+
+  final auth = FirebaseAuth.instance;
 
   @override
   State<LandingPage> createState() => _LandingPageState();
@@ -31,9 +30,9 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     if (_user == null) {
-      return LoginPage(onSignIn: _updateUser, auth: widget.auth);
+      return LoginPage(onSignIn: _updateUser);
     } else {
-      return HomePage(onSignOut: () => _updateUser(null), auth: widget.auth);
+      return HomePage(onSignOut: () => _updateUser(null));
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:foodapp/boundary/screens/recipe_page.dart';
+import 'package:foodapp/boundary/screens/recipe/recipe_page.dart';
 
 class IngredientFilter extends StatefulWidget {
   const IngredientFilter({

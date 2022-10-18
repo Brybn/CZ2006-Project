@@ -11,15 +11,15 @@ class Recipe {
     this.summary = '',
   });
 
-  String id;
-  String title;
-  String image;
-  String servings;
-  String readyInMinutes;
-  String calories;
-  List<String> analyzedInstructions;
-  String ingredients;
-  String summary;
+  final String id;
+  final String title;
+  final String image;
+  final String servings;
+  final String readyInMinutes;
+  final String calories;
+  final List<dynamic> analyzedInstructions;
+  final String ingredients;
+  final String summary;
 
   static Recipe fromJson(final data) {
     return Recipe(
@@ -29,8 +29,9 @@ class Recipe {
       servings: data['servings'].toString(),
       readyInMinutes: data['readyInMinutes'].toString(),
       calories: data['nutrition']['nutrients'][0]['amount'].toString(),
-      analyzedInstructions: _formatInstructions(data['analyzedInstructions'][0]['steps']),
-      // data['nutrition']['ingredients'],
+      analyzedInstructions:
+          _formatInstructions(data['analyzedInstructions'][0]['steps']),
+      // ingredients: data['nutrition']['ingredients'],
       summary: _stripHtml(data['summary']),
     );
   }
@@ -44,5 +45,33 @@ class Recipe {
       formattedSteps.add("Step ${element['number']}: ${element['step']}");
     }
     return formattedSteps;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'image': image,
+      'servings': servings,
+      'readyInMinutes': readyInMinutes,
+      'calories': calories,
+      'analyzedInstructions': analyzedInstructions,
+      'ingredients': ingredients,
+      'summary': summary,
+    };
+  }
+
+  static Recipe fromMap(Map data) {
+    return Recipe(
+      id: data['id'],
+      title: data['title'],
+      image: data['image'],
+      servings: data['servings'],
+      readyInMinutes: data['readyInMinutes'],
+      calories: data['calories'],
+      analyzedInstructions: data['analyzedInstructions'],
+      ingredients: data['ingredients'],
+      summary: data['summary'],
+    );
   }
 }

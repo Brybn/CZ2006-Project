@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/control/database.dart';
+import 'package:foodapp/entity/recipe.dart';
 
-class RecipeFavoriteButton extends StatefulWidget {
+class RecipeFavoriteButton extends StatelessWidget {
   const RecipeFavoriteButton({
     Key key,
-    this.id,
+    @required this.recipe,
+    this.color = Colors.orange,
   }) : super(key: key);
 
-  final String id;
-
-  @override
-  State<RecipeFavoriteButton> createState() => _RecipeFavoriteButtonState();
-}
-
-class _RecipeFavoriteButtonState extends State<RecipeFavoriteButton> {
-  bool _isFavorited = false;
+  final Recipe recipe;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      padding: const EdgeInsets.all(0.0),
-      iconSize: 49.0,
-      splashRadius: 30.0,
-      onPressed: _toggleFavorite,
-      icon: _isFavorited
-          ? const Icon(Icons.star_rounded, color: Colors.orange)
-          : const Icon(Icons.star_border_rounded, color: Colors.grey),
+    return StreamBuilder(
+      stream: Database.isRecipeFavorited(recipe),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          bool isFavorited = snapshot.data;
+          return IconButton(
+            padding: const EdgeInsets.all(0.0),
+            iconSize: 49.0,
+            splashRadius: 30.0,
+            onPressed: () => _toggleFavorite(isFavorited),
+            icon: isFavorited
+                ? Icon(Icons.star_rounded, color: color)
+                : const Icon(Icons.star_border_rounded, color: Colors.grey),
+          );
+        }
+        return const CircularProgressIndicator();
+      },
     );
   }
 
-  void _toggleFavorite() {
-    setState(() {
-      _isFavorited = !_isFavorited;
-    });
+  Future<void> _toggleFavorite(bool isFavorited) async {
+    if (isFavorited) {
+      await Database.removeFavoritedRecipe(recipe);
+    } else {
+      await Database.addFavoritedRecipe(recipe);
+    }
   }
 }

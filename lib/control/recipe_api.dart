@@ -11,7 +11,8 @@ class RecipeAPI {
   final String _baseURL = "api.spoonacular.com";
   static const apiKey = "1d34894957804e3f8fd6288cd7c89e0f";
 
-  Future<List<Recipe>> getRecipeList({String query = "", String ingredientFilters = ""}) async {
+  Future<List<Recipe>> getRecipeList(
+      {String query = "", String ingredientFilters = ""}) async {
     Map<String, String> parameters = {
       'apiKey': apiKey,
       'query': query,
@@ -35,6 +36,7 @@ class RecipeAPI {
     try {
       var response = await http.get(uri, headers: headers);
       var recipeData = jsonDecode(response.body);
+      // TODO: change here also
       int size =
           recipeData['results'].length < 2 ? recipeData['results'].length : 2;
       List<Recipe> recipeList = <Recipe>[];

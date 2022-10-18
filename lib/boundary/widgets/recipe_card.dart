@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:foodapp/boundary/widgets/recipe_favorite_button.dart';
 import 'package:foodapp/entity/recipe.dart';
-import 'package:foodapp/boundary/screens/recipe_information_page.dart';
+import 'package:foodapp/boundary/screens/recipe/recipe_information_page.dart';
 
 class RecipeCard extends StatelessWidget {
   const RecipeCard({
@@ -43,7 +43,7 @@ class RecipeCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12.0),
                 _recipeInformationColumn(),
-                RecipeFavoriteButton(id: recipe.id),
+                RecipeFavoriteButton(recipe: recipe),
               ],
             ),
           ),
