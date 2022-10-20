@@ -4,6 +4,8 @@ import 'package:location/location.dart';
 
 import 'package:foodapp/boundary/widgets/MultiSelectChip.dart';
 
+import 'favorited_restaurants_page.dart';
+
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key key}) : super(key: key);
 
@@ -12,7 +14,6 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
-  Location location = Location();
   LocationData _locationData;
 
   @override
@@ -22,10 +23,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   getLoc() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-
-    serviceEnabled = await location.serviceEnabled();
+    Location location = Location();
+    bool serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
@@ -33,21 +32,22 @@ class _RestaurantPageState extends State<RestaurantPage> {
       }
     }
 
-    permissionGranted = await location.hasPermission();
+    PermissionStatus permissionGranted = await location.hasPermission();
     if (permissionGranted == PermissionStatus.denied) {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
-    _locationData = await location.getLocation();
+    LocationData locationData = await location.getLocation();
+    setState(() => _locationData = locationData);
   }
 
   List<String> reportList = [
     "Vegan",
     "Vegetarian",
     "Halal",
-  ];
+  ]; // TODO: add more
 
   List<String> selectedReportList = [];
 
@@ -59,8 +59,19 @@ class _RestaurantPageState extends State<RestaurantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.orange,
-          title: const Text("Enter Your Preference")),
+        backgroundColor: Colors.orange,
+        title: const Text("Enter Your Preference"),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const FavoritedRestaurantsPage(),
+              ),
+            ),
+            icon: const Icon(Icons.star),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           const Padding(
@@ -75,14 +86,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
             child: DropdownButtonFormField(
               decoration: const InputDecoration(
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.orange, width: 2)),
+                  borderSide: BorderSide(color: Colors.orange, width: 2),
+                ),
               ),
               value: dropdownValue,
               onChanged: (String newValue) {
-                setState(() {
-                  dropdownValue = newValue;
-                });
+                setState(() => dropdownValue = newValue);
               },
+              // TODO: add more
               items: <String>['Chinese', 'Thai', 'Asian', 'Indian']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
@@ -97,8 +108,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
           ),
           const Padding(
             padding: EdgeInsets.only(top: 50, right: 20, left: 20),
-            child: Text("Dietary Requirements",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+            child: Text(
+              "Dietary Requirements",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
@@ -142,23 +155,26 @@ class _RestaurantPageState extends State<RestaurantPage> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
+                  borderRadius: BorderRadius.circular(40),
+                ),
                 backgroundColor: Colors.orange,
                 padding: const EdgeInsets.all(20.0),
               ),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RestaurantResultsPage(
-                        resCuisine: dropdownValue,
-                        resPreference: selectedReportList,
-                        resCurrentRangeValue: _currentRangeValues,
-                        resLatitude: _locationData.latitude,
-                        resLongitude: _locationData.longitude,
-                      ),
-                    ));
-              },
+              onPressed: _locationData == null
+                  ? null
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RestaurantResultsPage(
+                            cuisine: dropdownValue,
+                            preferences: selectedReportList,
+                            rangeValues: _currentRangeValues,
+                            latitude: _locationData.latitude,
+                            longitude: _locationData.longitude,
+                          ),
+                        ),
+                      );
+                    },
               child: const Center(
                 child: Text(
                   'Search',

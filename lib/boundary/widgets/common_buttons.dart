@@ -18,44 +18,24 @@ class _BaseButton extends StatelessWidget {
   }
 }
 
-class CustomBackButton extends StatelessWidget {
-  const CustomBackButton({Key key, this.onPressed}) : super(key: key);
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) =>
-      _BaseButton(iconData: Icons.arrow_back_ios_new, onPressed: onPressed);
-}
-
-class SearchFilterButton extends StatelessWidget {
-  const SearchFilterButton({Key key, this.onPressed}) : super(key: key);
-
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) =>
-      _BaseButton(iconData: Icons.filter_alt_outlined, onPressed: onPressed);
-}
-
 class FavoritedRecipesButton extends StatelessWidget {
   const FavoritedRecipesButton({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => _BaseButton(
-      iconData: Icons.stars_rounded,
+      iconData: Icons.star,
       onPressed: () =>
           Navigator.of(context).pushNamed('/FavoritedRecipesPage'));
 }
 
 class HomeButton extends StatelessWidget {
-  const HomeButton({Key key, this.onPressed}) : super(key: key);
-
-  final VoidCallback onPressed;
+  const HomeButton({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) =>
-      _BaseButton(iconData: Icons.home, onPressed: onPressed);
+  Widget build(BuildContext context) => _BaseButton(
+      iconData: Icons.home,
+      onPressed: () => Navigator.of(context)
+          .pushNamedAndRemoveUntil('/LandingPage', (route) => false));
 }
 
 class RecipeSearchButton extends StatelessWidget {

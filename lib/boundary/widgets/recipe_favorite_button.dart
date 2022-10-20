@@ -29,7 +29,7 @@ class RecipeFavoriteButton extends StatelessWidget {
                 : const Icon(Icons.star_border_rounded, color: Colors.grey),
           );
         }
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

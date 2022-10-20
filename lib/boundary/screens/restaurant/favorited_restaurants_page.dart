@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foodapp/boundary/widgets/favorited_restaurant_card.dart';
 import 'package:foodapp/control/database.dart';
 
 class FavoritedRestaurantsPage extends StatelessWidget {
-  FavoritedRestaurantsPage({Key key}) : super(key: key);
-
-  final User _user = FirebaseAuth.instance.currentUser;
+  const FavoritedRestaurantsPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +16,7 @@ class FavoritedRestaurantsPage extends StatelessWidget {
         stream: Database.favoritedRestaurantsStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final children = snapshot.data;
-            return ListView(
-              children: children,
-            );
+            return ListView(children: snapshot.data);
           }
           return const Center(child: CircularProgressIndicator());
         },

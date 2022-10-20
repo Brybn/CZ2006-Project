@@ -4,10 +4,12 @@ class RecipeSearchBar extends StatelessWidget {
   const RecipeSearchBar({
     Key key,
     this.controller,
-    @required this.onSubmitted,
+    this.onSubmitted,
+    this.onChanged,
   }) : super(key: key);
 
   final ValueChanged<String> onSubmitted;
+  final ValueChanged<String> onChanged;
   final TextEditingController controller;
 
   @override
@@ -26,6 +28,7 @@ class RecipeSearchBar extends StatelessWidget {
           border: InputBorder.none,
         ),
         onSubmitted: onSubmitted,
+        onChanged: onChanged,
       ),
     );
   }

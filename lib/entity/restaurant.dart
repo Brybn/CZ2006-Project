@@ -8,6 +8,7 @@ class Restaurant {
     this.longitude = 0.0,
     this.imageUrl = '',
     this.rating = 0.0,
+    this.distance = 0.0,
   });
 
   final String id;
@@ -18,6 +19,7 @@ class Restaurant {
   final double longitude;
   final String imageUrl;
   final double rating;
+  final double distance;
 
   Map<String, dynamic> toMap() {
     return {
@@ -38,15 +40,19 @@ class Restaurant {
       name: data['name'],
       address: data['address'],
       cuisine: data['cuisine'],
-      latitude: data['latitude']is int ? data['latitude'].toDouble() : data['latitude'],
-      longitude: data['longitude'] is int ? data['longitude'].toDouble() : data['longitude'],
+      latitude: data['latitude'] is int
+          ? data['latitude'].toDouble()
+          : data['latitude'],
+      longitude: data['longitude'] is int
+          ? data['longitude'].toDouble()
+          : data['longitude'],
       imageUrl: data['imageUrl'],
       rating:
           data['rating'] is int ? data['rating'].toDouble() : data['rating'],
     );
   }
 
-  static Restaurant fromJson(final data) {
+  static Restaurant fromJson(final data, final double distance) {
     return Restaurant(
       id: data['id_source'],
       name: data['name'],
@@ -57,6 +63,7 @@ class Restaurant {
       imageUrl: data['image_url'],
       rating:
           data['rating'] is int ? data['rating'].toDouble() : data['rating'],
+      distance: distance,
     );
   }
 }

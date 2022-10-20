@@ -63,7 +63,7 @@ class RecipeInformationPage extends StatelessWidget {
               ),
               const SizedBox(height: 10.0),
               Text(
-                recipe.ingredients,
+                recipe.ingredients.toString(),
                 style: const TextStyle(fontSize: 18.0),
               ),
               const SizedBox(height: 30.0),

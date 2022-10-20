@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 35, 20, 20),
               child: Text(
                 "Hello, \n${auth.currentUser.displayName}",
                 style: const TextStyle(

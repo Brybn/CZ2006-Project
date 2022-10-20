@@ -2,10 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:foodapp/boundary/widgets/google_sign_in_button.dart';
-
 import 'package:foodapp/control/authentication.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({
     Key key,
     @required this.onSignIn,
@@ -13,10 +12,19 @@ class LoginPage extends StatelessWidget {
 
   final void Function(User) onSignIn;
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool isLoading = false;
+
   Future<void> _signInWithGoogle() async {
     try {
+      setState(() => isLoading = true);
       final user = await Authentication.signInWithGoogle();
-      onSignIn(user);
+      setState(() => isLoading = false);
+      widget.onSignIn(user);
     } catch (e) {
       print(e.toString());
     }
@@ -49,7 +57,9 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: GoogleSignInButton(onPressed: _signInWithGoogle),
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : GoogleSignInButton(onPressed: _signInWithGoogle),
               ),
             ],
           ),

@@ -6,8 +6,6 @@ import 'home_page.dart';
 class LandingPage extends StatefulWidget {
   LandingPage({Key key}) : super(key: key);
 
-  final auth = FirebaseAuth.instance;
-
   @override
   State<LandingPage> createState() => _LandingPageState();
 }
@@ -18,13 +16,11 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
-    _updateUser(widget.auth.currentUser);
+    _updateUser(FirebaseAuth.instance.currentUser);
   }
 
   void _updateUser(User user) {
-    setState(() {
-      _user = user;
-    });
+    setState(() => _user = user);
   }
 
   @override

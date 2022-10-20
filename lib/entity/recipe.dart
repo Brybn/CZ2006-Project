@@ -7,7 +7,7 @@ class Recipe {
     this.readyInMinutes = '',
     this.calories = '',
     this.analyzedInstructions,
-    this.ingredients = '',
+    this.ingredients,
     this.summary = '',
   });
 
@@ -18,7 +18,7 @@ class Recipe {
   final String readyInMinutes;
   final String calories;
   final List<dynamic> analyzedInstructions;
-  final String ingredients;
+  final List<dynamic> ingredients;
   final String summary;
 
   static Recipe fromJson(final data) {
@@ -31,7 +31,7 @@ class Recipe {
       calories: data['nutrition']['nutrients'][0]['amount'].toString(),
       analyzedInstructions:
           _formatInstructions(data['analyzedInstructions'][0]['steps']),
-      // ingredients: data['nutrition']['ingredients'],
+      ingredients: data['nutrition']['ingredients'].map((item) => item['name']).toList(),
       summary: _stripHtml(data['summary']),
     );
   }

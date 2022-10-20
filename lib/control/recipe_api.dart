@@ -5,13 +5,10 @@ import 'package:foodapp/entity/recipe.dart';
 import 'package:http/http.dart' as http;
 
 class RecipeAPI {
-  RecipeAPI._instantiate();
-
-  static final RecipeAPI instance = RecipeAPI._instantiate();
-  final String _baseURL = "api.spoonacular.com";
+  static const String _baseURL = "api.spoonacular.com";
   static const apiKey = "1d34894957804e3f8fd6288cd7c89e0f";
 
-  Future<List<Recipe>> getRecipeList(
+  static Future<List<Recipe>> getRecipeList(
       {String query = "", String ingredientFilters = ""}) async {
     Map<String, String> parameters = {
       'apiKey': apiKey,
@@ -19,7 +16,7 @@ class RecipeAPI {
       'instructionsRequired': 'true',
       'fillIngredients': 'true',
       'addRecipeNutrition': 'true',
-      'number': '2', // TODO: increase at the end
+      'number': '4', // TODO: increase at the end
       'includeIngredients': ingredientFilters,
     };
 
@@ -36,12 +33,9 @@ class RecipeAPI {
     try {
       var response = await http.get(uri, headers: headers);
       var recipeData = jsonDecode(response.body);
-      // TODO: change here also
-      int size =
-          recipeData['results'].length < 2 ? recipeData['results'].length : 2;
       List<Recipe> recipeList = <Recipe>[];
-      for (int i = 0; i < size; i++) {
-        recipeList.add(Recipe.fromJson(recipeData['results'][i]));
+      for (var recipeJson in recipeData['results']) {
+        recipeList.add(Recipe.fromJson(recipeJson));
       }
       return recipeList;
     } catch (e) {

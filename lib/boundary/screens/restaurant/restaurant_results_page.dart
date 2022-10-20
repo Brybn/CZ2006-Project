@@ -7,64 +7,42 @@ import 'package:foodapp/entity/restaurant.dart';
 class RestaurantResultsPage extends StatefulWidget {
   final String cuisine;
   final List<String> preferences;
-  final RangeValues currentRangeValue;
+  final RangeValues rangeValues;
   final double latitude;
   final double longitude;
 
   const RestaurantResultsPage({
     Key key,
-    String resCuisine,
-    List<String> resPreference,
-    RangeValues resCurrentRangeValue,
-    double resLatitude,
-    double resLongitude,
-  })  : cuisine = resCuisine,
-        preferences = resPreference,
-        currentRangeValue = resCurrentRangeValue,
-        latitude = resLatitude,
-        longitude = resLongitude,
-        super(key: key);
+    this.cuisine,
+    this.preferences,
+    this.rangeValues,
+    this.latitude,
+    this.longitude,
+  }) : super(key: key);
 
   @override
   RestaurantResultsPageState createState() => RestaurantResultsPageState();
 }
 
 class RestaurantResultsPageState extends State<RestaurantResultsPage> {
-  List<Restaurant> restaurantList = [];
-  List itemsOnSearch = [];
-  List supportList = [];
-  bool noChange = true;
+  final List<Restaurant> _restaurantList = [];
+  final List<Restaurant> _filteredList = [];
+  bool _isLoading = true;
 
-  final TextEditingController _textEditingController = TextEditingController();
-
-  Widget _buildResults(String cuisine, List<String> preferences,
-      double latitude, double longitude, RangeValues rangeValues) {
-    return FutureBuilder(
-      future: RestaurantAPI.instance.getRestaurantList(
-        cuisine: cuisine,
-        preferences: preferences,
-        latitude: latitude,
-        longitude: longitude,
-        rangeValues: rangeValues,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          restaurantList = snapshot.data;
-          return restaurantList.isNotEmpty
-              ? Expanded(
-                  child: ListView.builder(
-                      itemCount: restaurantList.length,
-                      itemBuilder: (context, index) =>
-                          RestaurantCard(restaurant: restaurantList[index])),
-                )
-              : Container();
-        } else if (snapshot.hasError) {
-          return const Center(child: Text("error occurred"));
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    RestaurantAPI.getRestaurantList(
+      cuisine: widget.cuisine,
+      preferences: widget.preferences,
+      latitude: widget.latitude,
+      longitude: widget.longitude,
+      rangeValues: widget.rangeValues,
+    ).then((returnedList) => setState(() {
+          _restaurantList.addAll(returnedList);
+          _filteredList.addAll(returnedList);
+          _isLoading = false;
+        }));
   }
 
   @override
@@ -76,53 +54,94 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
           width: double.infinity,
           height: 40,
           color: Colors.white,
-          child: Center(
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  itemsOnSearch = restaurantList
-                      .where((element) => element.name
-                          .toLowerCase()
-                          .contains(value.toLowerCase()))
-                      .toList();
-                });
-              },
-              controller: _textEditingController,
-              decoration: const InputDecoration(
-                hintText: 'Search for something',
-                prefixIcon: Icon(Icons.search),
-              ),
+          child: TextField(
+            onChanged: _searchResults,
+            decoration: const InputDecoration(
+              hintText: 'Search for something',
+              prefixIcon: Icon(Icons.search),
             ),
           ),
         ),
         actions: <Widget>[
-          PopupMenuButton(
-              icon: const Icon(Icons.filter_alt),
-              itemBuilder: (context) =>
-                  [const PopupMenuItem(child: Text("item"))]),
+          _filterButton(),
           IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FavoritedRestaurantsPage(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.star)),
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          _buildResults(
-            widget.cuisine,
-            widget.preferences,
-            widget.latitude,
-            widget.longitude,
-            widget.currentRangeValue,
+            icon: const Icon(Icons.star),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const FavoritedRestaurantsPage(),
+              ),
+            ),
           ),
         ],
       ),
+      body: _buildResults(),
     );
+  }
+
+  Widget _buildResults() {
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _filteredList.isEmpty
+            ? const Center(child: Text('no results'))
+            : ListView.builder(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                itemCount: _filteredList.length,
+                itemBuilder: (context, index) =>
+                    RestaurantCard(restaurant: _filteredList[index]),
+              );
+  }
+
+  Widget _filterButton() {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.filter_alt),
+      position: PopupMenuPosition.under,
+      itemBuilder: (context) => <PopupMenuEntry<String>>[
+        const PopupMenuItem(
+          value: '',
+          height: 20.0,
+          enabled: false,
+          child: Text("Sort By"),
+        ),
+        const PopupMenuItem(
+          value: 'Alphabetical',
+          child: Text("Alphabetical"),
+        ),
+        const PopupMenuItem(
+          value: 'Distance',
+          child: Text("Distance"),
+        ),
+      ],
+      onSelected: _sortResults,
+    );
+  }
+
+  void _sortResults(String sortBy) {
+    switch (sortBy) {
+      case 'Alphabetical':
+        setState(() => _filteredList.sort((a, b) => a.name.compareTo(b.name)));
+        return;
+      case 'Distance':
+        setState(() =>
+            _filteredList.sort((a, b) => a.distance < b.distance ? 0 : 1));
+        return;
+      default:
+        return;
+    }
+  }
+
+  void _searchResults(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        _filteredList.clear();
+        _filteredList.addAll(_restaurantList);
+      });
+    } else {
+      setState(() {
+        _filteredList.clear();
+        _filteredList.addAll(_restaurantList.where((restaurant) =>
+            restaurant.name.toLowerCase().contains(query.toLowerCase())));
+      });
+    }
   }
 }

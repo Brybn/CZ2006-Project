@@ -15,7 +15,7 @@ class RecipePage extends StatefulWidget {
 class _RecipePageState extends State<RecipePage> {
   void _submit(BuildContext context, String query, String ingredientFilters) {
     Map args = {'query': query, 'ingredientFilters': ingredientFilters};
-    Navigator.of(context).pushNamed('/RecipeResultPage', arguments: args);
+    Navigator.of(context).pushNamed('/RecipeResultsPage', arguments: args);
   }
 
   final _queryController = TextEditingController();
@@ -28,6 +28,13 @@ class _RecipePageState extends State<RecipePage> {
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text("Enter Your Preference"),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () =>
+                Navigator.of(context).pushNamed('/FavoritedRecipesPage'),
+            icon: const Icon(Icons.star),
+          ),
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -42,17 +49,17 @@ class _RecipePageState extends State<RecipePage> {
                 ),
                 const SizedBox(height: 15.0),
                 IngredientFilter(
-                  onTap: (filters) => setState(() {
-                    _ingredientFilters = filters;
-                  }),
+                  onTap: (filters) =>
+                      setState(() => _ingredientFilters = filters),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 5.0),
           RecipeSearchButton(
-              onPressed: () =>
-                  _submit(context, _queryController.text, _ingredientFilters)),
+            onPressed: () =>
+                _submit(context, _queryController.text, _ingredientFilters),
+          ),
           const SizedBox(height: 15.0),
         ],
       ),

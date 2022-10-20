@@ -9,7 +9,7 @@ class RestaurantAPI {
 
   static final RestaurantAPI instance = RestaurantAPI._instantiate();
 
-  Future<List<Restaurant>> getRestaurantList({
+  static Future<List<Restaurant>> getRestaurantList({
     String cuisine,
     List<String> preferences,
     double latitude,
@@ -21,23 +21,20 @@ class RestaurantAPI {
     final data = await json.decode(response);
     List<Restaurant> restaurantList = <Restaurant>[];
     data["items"].forEach((item) {
-      var itemCuisines = item["cuisine"];
-      double itemLat = double.parse(item['lat']);
-      double itemLon = double.parse(item['lon']);
-      bool hasCuisine = itemCuisines.contains(cuisine);
-      bool withinDistance =
-          _calculateDistance(itemLat, itemLon, latitude, longitude) <=
-              rangeValues.end.toDouble();
-      bool containsAllPreferences =
-          preferences.every((preference) => itemCuisines.contains(preference));
+      double distance = _calculateDistance(double.parse(item['lat']),
+          double.parse(item['lon']), latitude, longitude);
+      bool hasCuisine = item["cuisine"].contains(cuisine);
+      bool withinDistance = distance <= rangeValues.end.toDouble();
+      bool containsAllPreferences = preferences
+          .every((preference) => item["cuisine"].contains(preference));
       if (hasCuisine && withinDistance && containsAllPreferences) {
-        restaurantList.add(Restaurant.fromJson(item));
+        restaurantList.add(Restaurant.fromJson(item, distance));
       }
     });
     return restaurantList;
   }
 
-  double _calculateDistance(lat1, lon1, lat2, lon2) {
+  static double _calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var a = 0.5 -
         cos((lat2 - lat1) * p) / 2 +
