@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/boundary/widgets/ingredient_filter.dart';
-import 'package:foodapp/boundary/widgets/recipe_search_bar.dart';
+import 'package:foodapp/boundary/widgets/recipe/ingredient_filter.dart';
+import 'package:foodapp/boundary/widgets/recipe/recipe_search_bar.dart';
 import 'package:foodapp/boundary/widgets/common_buttons.dart';
 
 typedef StringCallback = void Function(String val);
@@ -42,11 +42,7 @@ class _RecipePageState extends State<RecipePage> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(15.0, 30.0, 15.0, 0.0),
               children: <Widget>[
-                RecipeSearchBar(
-                  controller: _queryController,
-                  onSubmitted: (query) => _submit(
-                      context, _queryController.text, _ingredientFilters),
-                ),
+                RecipeSearchBar(controller: _queryController),
                 const SizedBox(height: 15.0),
                 IngredientFilter(
                   onTap: (filters) =>

@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:foodapp/entity/recipe.dart';
 import 'package:http/http.dart' as http;
 
 class RecipeAPI {
-  static const String _baseURL = "api.spoonacular.com";
+  static const String _baseUrl = "api.spoonacular.com";
   static const apiKey = "1d34894957804e3f8fd6288cd7c89e0f";
 
   static Future<List<Recipe>> getRecipeList(
@@ -21,7 +20,7 @@ class RecipeAPI {
     };
 
     Uri uri = Uri.https(
-      _baseURL,
+      _baseUrl,
       '/recipes/complexSearch',
       parameters,
     );

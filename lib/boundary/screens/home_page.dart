@@ -40,12 +40,12 @@ class HomePage extends StatelessWidget {
                   color: Colors.grey[200],
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    const SizedBox(),
                     _restaurantIcon(context),
-                    const SizedBox(height: 15),
                     _recipeIcon(context),
-                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                       child: _signOutButton(),
@@ -124,7 +124,7 @@ class HomePage extends StatelessWidget {
       await Authentication.signOut();
       onSignOut();
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 }

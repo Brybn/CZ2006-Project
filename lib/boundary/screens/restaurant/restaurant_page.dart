@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/boundary/screens/restaurant/restaurant_results_page.dart';
+import 'package:foodapp/boundary/widgets/common_buttons.dart';
+import 'package:foodapp/control/location_api.dart';
 import 'package:location/location.dart';
-
-import 'package:foodapp/boundary/widgets/MultiSelectChip.dart';
-
-import 'favorited_restaurants_page.dart';
+import 'package:foodapp/boundary/widgets/multi_select_chip.dart';
 
 class RestaurantPage extends StatefulWidget {
   const RestaurantPage({Key key}) : super(key: key);
@@ -14,46 +12,18 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
-  LocationData _locationData;
+  LocationData _userLocation;
+  List<String> reportList = ["Vegan", "Vegetarian", "Halal"]; // TODO: add more
+  List<String> _selectedReportList = [];
+  RangeValues _currentRangeValues = const RangeValues(0, 10);
+  String dropdownValue = 'Chinese';
 
   @override
   void initState() {
     super.initState();
-    getLoc();
+    LocationAPI.getLocation()
+        .then((location) => setState(() => _userLocation = location));
   }
-
-  getLoc() async {
-    Location location = Location();
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
-    }
-
-    PermissionStatus permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-    LocationData locationData = await location.getLocation();
-    setState(() => _locationData = locationData);
-  }
-
-  List<String> reportList = [
-    "Vegan",
-    "Vegetarian",
-    "Halal",
-  ]; // TODO: add more
-
-  List<String> selectedReportList = [];
-
-  RangeValues _currentRangeValues = const RangeValues(0, 10);
-
-  String dropdownValue = 'Chinese';
 
   @override
   Widget build(BuildContext context) {
@@ -61,16 +31,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text("Enter Your Preference"),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const FavoritedRestaurantsPage(),
-              ),
-            ),
-            icon: const Icon(Icons.star),
-          ),
-        ],
+        actions: const <Widget>[FavoritedRestaurantsButton()],
       ),
       body: Column(
         children: [
@@ -117,11 +78,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
             padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
             child: MultiSelectChip(
               reportList,
-              onSelectionChanged: (selectedList) {
-                setState(() {
-                  selectedReportList = selectedList;
-                });
-              },
+              onSelectionChanged: (selectedList) =>
+                  setState(() => _selectedReportList = selectedList),
               maxSelection: 5,
             ),
           ),
@@ -160,21 +118,18 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 backgroundColor: Colors.orange,
                 padding: const EdgeInsets.all(20.0),
               ),
-              onPressed: _locationData == null
+              onPressed: _userLocation == null
                   ? null
-                  : () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => RestaurantResultsPage(
-                            cuisine: dropdownValue,
-                            preferences: selectedReportList,
-                            rangeValues: _currentRangeValues,
-                            latitude: _locationData.latitude,
-                            longitude: _locationData.longitude,
-                          ),
-                        ),
-                      );
-                    },
+                  : () => Navigator.of(context).pushNamed(
+                        '/RestaurantResultsPage',
+                        arguments: {
+                          'cuisine': dropdownValue,
+                          'preferences': _selectedReportList,
+                          'rangeValues': _currentRangeValues,
+                          'latitude': _userLocation.latitude,
+                          'longitude': _userLocation.longitude,
+                        },
+                      ),
               child: const Center(
                 child: Text(
                   'Search',

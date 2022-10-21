@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:foodapp/control/recipe_api.dart';
-import 'package:foodapp/boundary/widgets/recipe_card.dart';
-import 'package:foodapp/boundary/widgets/recipe_search_bar.dart';
+import 'package:foodapp/boundary/widgets/recipe/recipe_card.dart';
+import 'package:foodapp/boundary/widgets/recipe/recipe_search_bar.dart';
 import 'package:foodapp/boundary/widgets/common_buttons.dart';
 import 'package:foodapp/entity/recipe.dart';
 
@@ -52,7 +52,7 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
           const SizedBox(height: 15.0),
           RecipeSearchBar(onChanged: _searchResults),
           const SizedBox(height: 5.0),
-          _buildResults(),
+          Expanded(child: _buildResults()),
           _bottomBar(),
         ],
       ),
@@ -60,20 +60,19 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
   }
 
   Widget _buildResults() {
-    return Expanded(
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _filteredList.isEmpty
-              ? const Center(child: Text('no results'))
-              : ListView.builder(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  itemCount: _filteredList.length,
-                  itemBuilder: (context, index) =>
-                      RecipeCard(recipe: _filteredList[index]),
-                ),
-    );
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (_filteredList.isEmpty) {
+      return const Center(child: Text('no results'));
+    } else {
+      return ListView.builder(
+        padding: const EdgeInsets.only(top: 5.0),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        itemCount: _filteredList.length,
+        itemBuilder: (context, index) =>
+            RecipeCard(recipe: _filteredList[index]),
+      );
+    }
   }
 
   Widget _filterButton() {

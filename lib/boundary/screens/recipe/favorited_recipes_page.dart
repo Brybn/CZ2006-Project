@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:foodapp/boundary/widgets/favorited_recipe_card.dart';
+import 'package:foodapp/boundary/widgets/recipe/favorited_recipe_card.dart';
 import 'package:foodapp/control/database.dart';
 
 class FavoritedRecipesPage extends StatelessWidget {

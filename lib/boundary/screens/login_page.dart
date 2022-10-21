@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => isLoading = false);
       widget.onSignIn(user);
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -54,11 +54,15 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 50),
               Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: const EdgeInsets.fromLTRB(10, 50, 10, 0),
                 child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
                     : GoogleSignInButton(onPressed: _signInWithGoogle),
               ),
             ],

@@ -63,3 +63,16 @@ class RecipeSearchButton extends StatelessWidget {
     );
   }
 }
+
+class FavoritedRestaurantsButton extends StatelessWidget {
+  const FavoritedRestaurantsButton({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () =>
+          Navigator.of(context).pushNamed('/FavoritedRestaurantsPage'),
+      icon: const Icon(Icons.star),
+    );
+  }
+}

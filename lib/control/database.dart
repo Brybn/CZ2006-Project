@@ -1,16 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:foodapp/boundary/widgets/favorited_recipe_card.dart';
-import 'package:foodapp/boundary/widgets/favorited_restaurant_card.dart';
-
+import 'package:foodapp/boundary/widgets/recipe/favorited_recipe_card.dart';
+import 'package:foodapp/boundary/widgets/restaurant/favorited_restaurant_card.dart';
 import 'package:foodapp/entity/recipe.dart';
 import 'package:foodapp/entity/restaurant.dart';
 
 class Database {
-  Database._instantiate();
-
-  static final Database instance = Database._instantiate();
-
   static Future<void> addFavoritedRecipe(Recipe recipe) async {
     final uid = FirebaseAuth.instance.currentUser.uid;
     final path = 'users/$uid/favorited_recipes/${recipe.id}';
@@ -78,5 +73,28 @@ class Database {
     final reference = FirebaseFirestore.instance.doc(path);
     final snapshots = reference.snapshots();
     return snapshots.map((snapshot) => snapshot.data() != null);
+  }
+
+  static Future<void> addRestaurantReview(
+      Restaurant restaurant, String review) {
+    final user = FirebaseAuth.instance.currentUser;
+    final path = 'restaurants/${restaurant.id}/reviews';
+    final reference = FirebaseFirestore.instance.collection(path);
+    return reference.add({
+      'review': review,
+      'user_img': user.photoURL,
+      'user': user.uid,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  static Stream<List<Map<String, dynamic>>> restaurantReviewsStream(
+      Restaurant restaurant) {
+    final path = 'restaurants/${restaurant.id}/reviews';
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots =
+        reference.orderBy('timestamp', descending: true).snapshots();
+    return snapshots
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 }

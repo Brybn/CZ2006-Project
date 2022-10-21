@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/boundary/screens/restaurant/favorited_restaurants_page.dart';
-import 'package:foodapp/boundary/widgets/restaurant_card.dart';
+import 'package:foodapp/boundary/widgets/common_buttons.dart';
+import 'package:foodapp/boundary/widgets/restaurant/restaurant_card.dart';
 import 'package:foodapp/control/restaurant_api.dart';
 import 'package:foodapp/entity/restaurant.dart';
 
@@ -8,16 +8,16 @@ class RestaurantResultsPage extends StatefulWidget {
   final String cuisine;
   final List<String> preferences;
   final RangeValues rangeValues;
-  final double latitude;
-  final double longitude;
+  final double userLatitude;
+  final double userLongitude;
 
   const RestaurantResultsPage({
     Key key,
     this.cuisine,
     this.preferences,
     this.rangeValues,
-    this.latitude,
-    this.longitude,
+    this.userLatitude,
+    this.userLongitude,
   }) : super(key: key);
 
   @override
@@ -35,8 +35,8 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
     RestaurantAPI.getRestaurantList(
       cuisine: widget.cuisine,
       preferences: widget.preferences,
-      latitude: widget.latitude,
-      longitude: widget.longitude,
+      latitude: widget.userLatitude,
+      longitude: widget.userLongitude,
       rangeValues: widget.rangeValues,
     ).then((returnedList) => setState(() {
           _restaurantList.addAll(returnedList);
@@ -64,14 +64,7 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
         ),
         actions: <Widget>[
           _filterButton(),
-          IconButton(
-            icon: const Icon(Icons.star),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const FavoritedRestaurantsPage(),
-              ),
-            ),
-          ),
+          const FavoritedRestaurantsButton(),
         ],
       ),
       body: _buildResults(),
@@ -79,17 +72,18 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
   }
 
   Widget _buildResults() {
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : _filteredList.isEmpty
-            ? const Center(child: Text('no results'))
-            : ListView.builder(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                itemCount: _filteredList.length,
-                itemBuilder: (context, index) =>
-                    RestaurantCard(restaurant: _filteredList[index]),
-              );
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (_filteredList.isEmpty) {
+      return const Center(child: Text('no results found'));
+    } else {
+      return ListView.builder(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        itemCount: _filteredList.length,
+        itemBuilder: (context, index) =>
+            RestaurantCard(restaurant: _filteredList[index]),
+      );
+    }
   }
 
   Widget _filterButton() {

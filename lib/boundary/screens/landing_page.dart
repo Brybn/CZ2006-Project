@@ -4,7 +4,7 @@ import 'package:foodapp/boundary/screens/login_page.dart';
 import 'home_page.dart';
 
 class LandingPage extends StatefulWidget {
-  LandingPage({Key key}) : super(key: key);
+  const LandingPage({Key key}) : super(key: key);
 
   @override
   State<LandingPage> createState() => _LandingPageState();
