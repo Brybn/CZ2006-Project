@@ -106,7 +106,7 @@ class _IngredientFilterState extends State<IngredientFilter> {
 
   final List<String> _selectedFilters = <String>[];
 
-  Iterable<Widget> _ingredientChips(List<String> ingredients) {
+  List<Widget> _ingredientChips(List<String> ingredients) {
     return ingredients
         .map((ingredient) => Padding(
               padding: const EdgeInsets.fromLTRB(1.0, 0.0, 1.0, 0.0),
@@ -135,7 +135,12 @@ class _IngredientFilterState extends State<IngredientFilter> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Text('Selected: ${_selectedFilters.join(',')}'),
+        if (_selectedFilters.isNotEmpty)
+          Text(
+            _selectedFilters.join(', '),
+            style: const TextStyle(fontSize: 16.0),
+          ),
+        const SizedBox(height: 10.0),
         ..._ingredientCategory("Pantry Items", _pantryItemsList),
         ..._ingredientCategory("Dairy", _dairyList),
         ..._ingredientCategory("Spices", _spiceList),

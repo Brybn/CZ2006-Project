@@ -23,6 +23,7 @@ class RouteGenerator {
             builder: (context) => RecipeResultsPage(
               query: args['query'],
               ingredientFilters: args['ingredientFilters'],
+              maxCalories: args['maxCalories'],
             ),
           );
         }
@@ -41,9 +42,9 @@ class RouteGenerator {
             builder: (context) => RestaurantResultsPage(
               cuisine: args['cuisine'],
               preferences: args['preferences'],
-              rangeValues: args['rangeValues'],
-              userLatitude: args['latitude'],
-              userLongitude: args['longitude'],
+              rangeValue: args['rangeValue'],
+              userLatitude: args['userLatitude'],
+              userLongitude: args['userLongitude'],
             ),
           );
         }

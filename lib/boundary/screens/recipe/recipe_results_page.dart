@@ -8,12 +8,14 @@ import 'package:foodapp/entity/recipe.dart';
 class RecipeResultsPage extends StatefulWidget {
   const RecipeResultsPage({
     Key key,
-    this.query = '',
-    this.ingredientFilters = '',
+    this.query = "",
+    this.ingredientFilters = "",
+    this.maxCalories = "",
   }) : super(key: key);
 
   final String query;
   final String ingredientFilters;
+  final String maxCalories;
 
   @override
   State<RecipeResultsPage> createState() => RecipeResultsPageState();
@@ -30,6 +32,7 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
     RecipeAPI.getRecipeList(
       query: widget.query,
       ingredientFilters: widget.ingredientFilters,
+      maxCalories: widget.maxCalories,
     ).then((returnedList) => setState(() {
           _recipeList.addAll(returnedList);
           _filteredList.addAll(returnedList);
@@ -47,14 +50,16 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
         title: const Text("Results"),
         actions: <Widget>[_filterButton()],
       ),
-      body: Column(
-        children: <Widget>[
-          const SizedBox(height: 15.0),
-          RecipeSearchBar(onChanged: _searchResults),
-          const SizedBox(height: 5.0),
-          Expanded(child: _buildResults()),
-          _bottomBar(),
-        ],
+      bottomNavigationBar: _bottomBar(),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
+        child: Column(
+          children: <Widget>[
+            RecipeSearchBar(onChanged: _searchResults),
+            const SizedBox(height: 5.0),
+            Expanded(child: _buildResults()),
+          ],
+        ),
       ),
     );
   }
@@ -111,13 +116,12 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
         return;
       case 'Calories':
         setState(() => _filteredList.sort((a, b) =>
-            double.parse(a.calories) < double.parse(b.calories) ? 0 : 1));
+            double.parse(a.calories).compareTo(double.parse(b.calories))));
         return;
       case 'Time':
         setState(() => _filteredList.sort((a, b) =>
-            double.parse(a.readyInMinutes) < double.parse(b.readyInMinutes)
-                ? 0
-                : 1));
+            double.parse(a.readyInMinutes)
+                .compareTo(double.parse(b.readyInMinutes))));
         return;
       default:
         return;

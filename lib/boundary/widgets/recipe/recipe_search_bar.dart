@@ -8,9 +8,9 @@ class RecipeSearchBar extends StatelessWidget {
     this.onChanged,
   }) : super(key: key);
 
+  final TextEditingController controller;
   final ValueChanged<String> onSubmitted;
   final ValueChanged<String> onChanged;
-  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +21,14 @@ class RecipeSearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+        onSubmitted: onSubmitted,
+        onChanged: onChanged,
         decoration: const InputDecoration(
           hintText: "Search",
           contentPadding: EdgeInsets.symmetric(vertical: 15.0),
           prefixIcon: Icon(Icons.search, color: Colors.orange, size: 27.0),
           border: InputBorder.none,
         ),
-        onSubmitted: onSubmitted,
-        onChanged: onChanged,
       ),
     );
   }

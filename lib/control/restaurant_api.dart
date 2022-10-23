@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:foodapp/entity/restaurant.dart';
 
@@ -14,17 +13,17 @@ class RestaurantAPI {
     List<String> preferences,
     double latitude,
     double longitude,
-    RangeValues rangeValues,
+    double rangeValue,
   }) async {
     final String response =
         await rootBundle.loadString('assets/restaurants.json');
     final data = await json.decode(response);
-    List<Restaurant> restaurantList = <Restaurant>[];
+    final List<Restaurant> restaurantList = <Restaurant>[];
     data["items"].forEach((item) {
       double distance = _calculateDistance(double.parse(item['lat']),
           double.parse(item['lon']), latitude, longitude);
-      bool hasCuisine = item["cuisine"].contains(cuisine);
-      bool withinDistance = distance <= rangeValues.end.toDouble();
+      bool hasCuisine = cuisine == "None" || item["cuisine"].contains(cuisine);
+      bool withinDistance = distance <= rangeValue;
       bool containsAllPreferences = preferences
           .every((preference) => item["cuisine"].contains(preference));
       if (hasCuisine && withinDistance && containsAllPreferences) {

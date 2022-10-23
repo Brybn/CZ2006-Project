@@ -7,8 +7,11 @@ class RecipeAPI {
   static const String _baseUrl = "api.spoonacular.com";
   static const apiKey = "1d34894957804e3f8fd6288cd7c89e0f";
 
-  static Future<List<Recipe>> getRecipeList(
-      {String query = "", String ingredientFilters = ""}) async {
+  static Future<List<Recipe>> getRecipeList({
+    String query = "",
+    String ingredientFilters = "",
+    String maxCalories = "",
+  }) async {
     Map<String, String> parameters = {
       'apiKey': apiKey,
       'query': query,
@@ -17,6 +20,7 @@ class RecipeAPI {
       'addRecipeNutrition': 'true',
       'number': '4', // TODO: increase at the end
       'includeIngredients': ingredientFilters,
+      if (maxCalories.isNotEmpty) 'maxCalories': maxCalories,
     };
 
     Uri uri = Uri.https(

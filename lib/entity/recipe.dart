@@ -29,9 +29,9 @@ class Recipe {
       servings: data['servings'].toString(),
       readyInMinutes: data['readyInMinutes'].toString(),
       calories: data['nutrition']['nutrients'][0]['amount'].toString(),
-      analyzedInstructions:
-          _formatInstructions(data['analyzedInstructions'][0]['steps']),
-      ingredients: data['nutrition']['ingredients'].map((item) => item['name']).toList(),
+      analyzedInstructions: _formatInstructions(data['analyzedInstructions']),
+      ingredients:
+          data['extendedIngredients'].map((item) => item['original']).toList(),
       summary: _stripHtml(data['summary']),
     );
   }
@@ -39,10 +39,15 @@ class Recipe {
   static String _stripHtml(String text) =>
       text.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), '');
 
-  static List<String> _formatInstructions(List steps) {
+  static List<String> _formatInstructions(List instructions) {
+    if (instructions.isEmpty) {
+      return <String>[];
+    }
     List<String> formattedSteps = <String>[];
-    for (var element in steps) {
-      formattedSteps.add("Step ${element['number']}: ${element['step']}");
+    List<dynamic> steps = instructions[0]['steps'];
+    for (var step in steps) {
+      formattedSteps.add(
+          "${step['step']}".replaceAll(RegExp(r'[^A-Za-z0-9. -,()$/:]'), ''));
     }
     return formattedSteps;
   }

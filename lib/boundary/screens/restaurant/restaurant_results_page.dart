@@ -7,7 +7,7 @@ import 'package:foodapp/entity/restaurant.dart';
 class RestaurantResultsPage extends StatefulWidget {
   final String cuisine;
   final List<String> preferences;
-  final RangeValues rangeValues;
+  final double rangeValue;
   final double userLatitude;
   final double userLongitude;
 
@@ -15,7 +15,7 @@ class RestaurantResultsPage extends StatefulWidget {
     Key key,
     this.cuisine,
     this.preferences,
-    this.rangeValues,
+    this.rangeValue,
     this.userLatitude,
     this.userLongitude,
   }) : super(key: key);
@@ -37,7 +37,7 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
       preferences: widget.preferences,
       latitude: widget.userLatitude,
       longitude: widget.userLongitude,
-      rangeValues: widget.rangeValues,
+      rangeValue: widget.rangeValue,
     ).then((returnedList) => setState(() {
           _restaurantList.addAll(returnedList);
           _filteredList.addAll(returnedList);
@@ -48,6 +48,7 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: Container(
@@ -57,7 +58,7 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
           child: TextField(
             onChanged: _searchResults,
             decoration: const InputDecoration(
-              hintText: 'Search for something',
+              hintText: 'Search',
               prefixIcon: Icon(Icons.search),
             ),
           ),
@@ -117,7 +118,7 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
         return;
       case 'Distance':
         setState(() =>
-            _filteredList.sort((a, b) => a.distance < b.distance ? 0 : 1));
+            _filteredList.sort((a, b) => a.distance.compareTo(b.distance)));
         return;
       default:
         return;

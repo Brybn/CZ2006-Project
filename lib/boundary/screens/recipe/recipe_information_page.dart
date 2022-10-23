@@ -62,18 +62,14 @@ class RecipeInformationPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
-              Text(
-                // TODO: make it look better
-                recipe.ingredients.toString(),
-                style: const TextStyle(fontSize: 18.0),
-              ),
+              ..._ingredientList(recipe.ingredients),
               const SizedBox(height: 30.0),
               const Text(
                 "Instructions",
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
-              ..._instructionsList(recipe.analyzedInstructions),
+              ..._instructionList(),
             ],
           ),
         ],
@@ -162,11 +158,29 @@ class RecipeInformationPage extends StatelessWidget {
       ],
     );
   }
-}
 
-List<Widget> _instructionsList(List<dynamic> instructions) {
-  // TODO: make it look better
-  return instructions
-      .map((e) => Text(e.toString(), style: const TextStyle(fontSize: 18.0)))
-      .toList();
+  List<Widget> _ingredientList(List<dynamic> list) {
+    return list
+        .map((e) => Text(e.toString(), style: const TextStyle(fontSize: 18.0)))
+        .toList();
+  }
+
+  List<Widget> _instructionList() {
+    final List<Widget> instructionList = [];
+    for (int i = 0; i < recipe.analyzedInstructions.length; i++) {
+      instructionList.add(
+        Text(
+          'Step ${i + 1}:',
+          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+        ),
+      );
+      instructionList.add(
+        Text(
+          recipe.analyzedInstructions[i],
+          style: const TextStyle(fontSize: 18.0),
+        ),
+      );
+    }
+    return instructionList;
+  }
 }

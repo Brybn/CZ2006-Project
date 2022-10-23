@@ -23,7 +23,10 @@ class FavoritedRecipesPage extends StatelessWidget {
       stream: Database.favoritedRecipesStream(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return ListView(children: snapshot.data);
+          return ListView(
+            padding: const EdgeInsets.all(10.0),
+            children: snapshot.data,
+          );
         }
         return const Center(child: CircularProgressIndicator());
       },
