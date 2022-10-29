@@ -21,12 +21,13 @@ class HomePage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 35, 20, 20),
               child: Text(
-                "Hello, \n${auth.currentUser.displayName}",
+                "Hello,\n${auth.currentUser.providerData[0].displayName}",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Expanded(

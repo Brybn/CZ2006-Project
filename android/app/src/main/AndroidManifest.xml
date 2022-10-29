@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.foodapp">
+    package="com.banyr.foodapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_logo2"
         android:label="foodapp">
         <activity
             android:name=".MainActivity"

@@ -1,30 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:foodapp/entity/recipe.dart';
 import 'package:http/http.dart' as http;
 
 class RecipeAPI {
-  static const String _baseUrl = "api.spoonacular.com";
+  RecipeAPI._instantiate();
+
+  static final RecipeAPI instance = RecipeAPI._instantiate();
+  final String _baseURL = "api.spoonacular.com";
   static const apiKey = "1d34894957804e3f8fd6288cd7c89e0f";
 
-  static Future<List<Recipe>> getRecipeList({
-    String query = "",
-    String ingredientFilters = "",
-    String maxCalories = "",
-  }) async {
+  Future<List<Recipe>> getRecipeList({String query = "", String ingredientFilters = ""}) async {
     Map<String, String> parameters = {
       'apiKey': apiKey,
       'query': query,
       'instructionsRequired': 'true',
       'fillIngredients': 'true',
       'addRecipeNutrition': 'true',
-      'number': '20',
+      'number': '2', // TODO: increase at the end
       'includeIngredients': ingredientFilters,
-      if (maxCalories.isNotEmpty) 'maxCalories': maxCalories,
     };
 
     Uri uri = Uri.https(
-      _baseUrl,
+      _baseURL,
       '/recipes/complexSearch',
       parameters,
     );
@@ -36,9 +35,11 @@ class RecipeAPI {
     try {
       var response = await http.get(uri, headers: headers);
       var recipeData = jsonDecode(response.body);
+      int size =
+          recipeData['totalResults'] < 2 ? recipeData['totalResults'] : 2;
       List<Recipe> recipeList = <Recipe>[];
-      for (var recipeJson in recipeData['results']) {
-        recipeList.add(Recipe.fromJson(recipeJson));
+      for (int i = 0; i < size; i++) {
+        recipeList.add(Recipe.fromJson(recipeData['results'][i]));
       }
       return recipeList;
     } catch (e) {

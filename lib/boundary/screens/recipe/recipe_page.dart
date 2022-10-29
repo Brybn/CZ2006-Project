@@ -28,6 +28,7 @@ class _RecipePageState extends State<RecipePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffefefef),
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text("Enter Your Preference"),
@@ -61,9 +62,9 @@ class _RecipePageState extends State<RecipePage> {
               ],
             ),
           ),
-          const SizedBox(height: 5.0),
+          const SizedBox(height: 10.0),
           RecipeSearchButton(onPressed: _submit),
-          const SizedBox(height: 15.0),
+          const SizedBox(height: 10.0),
         ],
       ),
     );
@@ -111,8 +112,6 @@ class _RecipePageState extends State<RecipePage> {
         fillColor: Colors.white,
         labelText: 'Input Calories',
         floatingLabelStyle: const TextStyle(color: Colors.grey),
-        helperText: "",
-        helperMaxLines: 3,
         prefixIcon: const Icon(
           Icons.local_fire_department,
           color: Colors.orange,

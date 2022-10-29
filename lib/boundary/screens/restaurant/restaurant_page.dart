@@ -42,7 +42,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     "Seafood",
     "Vegan",
     "Vegetarian",
-  ]; // TODO: add more?
+  ];
 
   LocationData _userLocation;
   List<String> _selectedPreferences = [];

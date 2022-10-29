@@ -18,7 +18,12 @@ class RecipeInformationPage extends StatelessWidget {
         backgroundColor: Colors.orange,
         title: const Text("Results"),
         actions: <Widget>[
-          RecipeFavoriteButton(recipe: recipe, color: Colors.white),
+          RecipeFavoriteButton(
+            recipe: recipe,
+            color: Colors.white,
+            iconSize: 36.0,
+          ),
+          const SizedBox(width: 10.0),
         ],
       ),
       body: ListView(
@@ -49,24 +54,24 @@ class RecipeInformationPage extends StatelessWidget {
               const SizedBox(height: 20.0),
               const Text(
                 "Description",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
               Text(
                 recipe.summary,
-                style: const TextStyle(fontSize: 18.0),
+                style: const TextStyle(fontSize: 16.0),
               ),
               const SizedBox(height: 30.0),
               const Text(
                 "Ingredients",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
               ..._ingredientList(recipe.ingredients),
               const SizedBox(height: 30.0),
               const Text(
                 "Instructions",
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10.0),
               ..._instructionList(),
@@ -110,10 +115,7 @@ class RecipeInformationPage extends StatelessWidget {
         const SizedBox(width: 3.0),
         Text(
           "${recipe.servings} servings",
-          style: const TextStyle(
-            fontSize: 15.0,
-            color: Colors.orange,
-          ),
+          style: const TextStyle(color: Colors.orange),
         ),
       ],
     );
@@ -130,10 +132,7 @@ class RecipeInformationPage extends StatelessWidget {
         const SizedBox(width: 3.0),
         Text(
           "${recipe.readyInMinutes} minutes",
-          style: const TextStyle(
-            fontSize: 15.0,
-            color: Colors.orange,
-          ),
+          style: const TextStyle(color: Colors.orange),
         ),
       ],
     );
@@ -150,10 +149,7 @@ class RecipeInformationPage extends StatelessWidget {
         const SizedBox(width: 3.0),
         Text(
           "${recipe.calories} kcal",
-          style: const TextStyle(
-            fontSize: 15.0,
-            color: Colors.orange,
-          ),
+          style: const TextStyle(color: Colors.orange),
         ),
       ],
     );
@@ -161,7 +157,7 @@ class RecipeInformationPage extends StatelessWidget {
 
   List<Widget> _ingredientList(List<dynamic> list) {
     return list
-        .map((e) => Text(e.toString(), style: const TextStyle(fontSize: 18.0)))
+        .map((e) => Text(e.toString(), style: const TextStyle(fontSize: 16.0)))
         .toList();
   }
 
@@ -171,13 +167,13 @@ class RecipeInformationPage extends StatelessWidget {
       instructionList.add(
         Text(
           'Step ${i + 1}:',
-          style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.w700),
+          style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
         ),
       );
       instructionList.add(
         Text(
           recipe.analyzedInstructions[i],
-          style: const TextStyle(fontSize: 18.0),
+          style: const TextStyle(fontSize: 16.0),
         ),
       );
     }

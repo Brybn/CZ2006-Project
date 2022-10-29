@@ -29,6 +29,10 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadData());
+  }
+
+  void _loadData() {
     RecipeAPI.getRecipeList(
       query: widget.query,
       ingredientFilters: widget.ingredientFilters,
@@ -51,31 +55,45 @@ class RecipeResultsPageState extends State<RecipeResultsPage> {
         actions: <Widget>[_filterButton()],
       ),
       bottomNavigationBar: _bottomBar(),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 0.0),
-        child: Column(
-          children: <Widget>[
-            RecipeSearchBar(onChanged: _searchResults),
-            const SizedBox(height: 5.0),
-            Expanded(child: _buildResults()),
-          ],
-        ),
+      body: CustomScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        slivers: <Widget>[
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 0.0),
+              child: RecipeSearchBar(onChanged: _searchResults),
+            ),
+          ),
+          _buildResults(),
+        ],
       ),
     );
   }
 
   Widget _buildResults() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
+      );
     } else if (_filteredList.isEmpty) {
-      return const Center(child: Text('no results'));
+      return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: Text('No results found.')),
+      );
     } else {
-      return ListView.builder(
-        padding: const EdgeInsets.only(top: 5.0),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemCount: _filteredList.length,
-        itemBuilder: (context, index) =>
-            RecipeCard(recipe: _filteredList[index]),
+      return SliverPadding(
+        padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => RecipeCard(recipe: _filteredList[index]),
+            childCount: _filteredList.length,
+          ),
+        ),
       );
     }
   }

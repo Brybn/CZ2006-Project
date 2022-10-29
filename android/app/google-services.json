@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:717725758657:android:f1ab1ac768183f1f761040",
+        "mobilesdk_app_id": "1:717725758657:android:fd7eef0560697946761040",
         "android_client_info": {
-          "package_name": "com.example.foodapp"
+          "package_name": "com.banyr.foodapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "717725758657-0lp8rk860920tguoto52op06rl4m011i.apps.googleusercontent.com",
+          "client_id": "717725758657-5tdapev9hlv03vpgjr2fgqp9glii108i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.foodapp",
+            "package_name": "com.banyr.foodapp",
             "certificate_hash": "8138057f26865988fb6aae46c14a1e93546b3a34"
           }
         },

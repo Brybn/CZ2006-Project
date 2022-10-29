@@ -32,6 +32,10 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadData());
+  }
+
+  void _loadData() {
     RestaurantAPI.getRestaurantList(
       cuisine: widget.cuisine,
       preferences: widget.preferences,

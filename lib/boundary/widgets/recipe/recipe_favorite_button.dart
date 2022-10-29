@@ -7,10 +7,12 @@ class RecipeFavoriteButton extends StatelessWidget {
     Key key,
     @required this.recipe,
     this.color = Colors.orange,
+    this.iconSize = 49.0,
   }) : super(key: key);
 
   final Recipe recipe;
   final Color color;
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class RecipeFavoriteButton extends StatelessWidget {
           bool isFavorited = snapshot.data;
           return IconButton(
             padding: const EdgeInsets.all(0.0),
-            iconSize: 49.0,
+            iconSize: iconSize,
             splashRadius: 30.0,
             onPressed: () => _toggleFavorite(isFavorited),
             icon: isFavorited

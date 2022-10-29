@@ -78,14 +78,21 @@ class Database {
   static Future<void> addRestaurantReview(
       Restaurant restaurant, String review) {
     final user = FirebaseAuth.instance.currentUser;
-    final path = 'restaurants/${restaurant.id}/reviews';
-    final reference = FirebaseFirestore.instance.collection(path);
-    return reference.add({
+    final path = 'restaurants/${restaurant.id}/reviews/${user.uid}';
+    final reference = FirebaseFirestore.instance.doc(path);
+    return reference.set({
       'review': review,
       'user_img': user.photoURL,
-      'user': user.uid,
+      'user_name': user.providerData[0].displayName,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
     });
+  }
+
+  static Future<void> removeRestaurantReview(
+      Restaurant restaurant, String uid) async {
+    final path = 'restaurants/${restaurant.id}/reviews/$uid';
+    final reference = FirebaseFirestore.instance.doc(path);
+    await reference.delete();
   }
 
   static Stream<List<Map<String, dynamic>>> restaurantReviewsStream(
@@ -94,7 +101,22 @@ class Database {
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots =
         reference.orderBy('timestamp', descending: true).snapshots();
-    return snapshots
-        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (doc) {
+          final map = doc.data();
+          map['uid'] = doc.id;
+          return map;
+        },
+      ).toList(),
+    );
+  }
+
+  static Future<String> getRestaurantReview(Restaurant restaurant) async {
+    final uid = FirebaseAuth.instance.currentUser.uid;
+    final path = 'restaurants/${restaurant.id}/reviews/$uid';
+    final reference = FirebaseFirestore.instance.doc(path);
+    final doc = await reference.get();
+    return doc.data() == null ? '' : doc.data()['review'];
   }
 }

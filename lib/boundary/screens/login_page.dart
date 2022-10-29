@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/app-logo.png',
+                'assets/images/app_logo.png',
                 height: 200,
                 width: 200,
               ),
@@ -49,10 +49,13 @@ class _LoginPageState extends State<LoginPage> {
                 style: GoogleFonts.bebasNeue(fontSize: 52),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Get Your preferred restaurants and recipes',
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
+              const Padding(
+                padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                child: Text(
+                  'Get Your preferred restaurants and recipes',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(10, 50, 10, 0),
