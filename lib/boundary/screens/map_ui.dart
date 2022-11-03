@@ -28,6 +28,10 @@ class _MapUIState extends State<MapUI> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadLocation());
+  }
+
+  void _loadLocation() {
     LocationAPI.getLocation()
         .then((location) => setState(() => _userLocation = location));
   }
@@ -55,6 +59,7 @@ class _MapUIState extends State<MapUI> {
             initialCameraPosition: _kGooglePlex,
             zoomControlsEnabled: true,
             myLocationEnabled: true,
+            trafficEnabled: true,
             markers: _userLocation == null ? <Marker>{} : _createMarker(),
             onMapCreated: _controller.complete,
             polylines: {
@@ -117,7 +122,10 @@ class _MapUIState extends State<MapUI> {
   }
 
   void showPolyline() async {
-    // Get directions
+    if (_info != null) {
+      return;
+    }
+
     final directions = await LocationAPI.getDirections(
       originLat: _userLocation.latitude,
       originLon: _userLocation.longitude,

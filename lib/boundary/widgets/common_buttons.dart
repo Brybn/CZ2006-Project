@@ -23,9 +23,10 @@ class FavoritedRecipesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _BaseButton(
-      iconData: Icons.star,
-      onPressed: () =>
-          Navigator.of(context).pushNamed('/FavoritedRecipesPage'));
+        iconData: Icons.star,
+        onPressed: () =>
+            Navigator.of(context).pushNamed('/FavoritedRecipesPage'),
+      );
 }
 
 class HomeButton extends StatelessWidget {
@@ -68,11 +69,9 @@ class FavoritedRestaurantsButton extends StatelessWidget {
   const FavoritedRestaurantsButton({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () =>
-          Navigator.of(context).pushNamed('/FavoritedRestaurantsPage'),
-      icon: const Icon(Icons.star),
-    );
-  }
+  Widget build(BuildContext context) => _BaseButton(
+        iconData: Icons.star,
+        onPressed: () =>
+            Navigator.of(context).pushNamed('/FavoritedRestaurantsPage'),
+      );
 }

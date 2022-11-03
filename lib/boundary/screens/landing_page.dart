@@ -16,7 +16,9 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
-    _updateUser(FirebaseAuth.instance.currentUser);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _updateUser(FirebaseAuth.instance.currentUser),
+    );
   }
 
   void _updateUser(User user) {

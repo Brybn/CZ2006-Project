@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
       widget.onSignIn(user);
     } catch (e) {
       debugPrint(e.toString());
+      setState(() => isLoading = false);
     }
   }
 

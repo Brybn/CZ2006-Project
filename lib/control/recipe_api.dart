@@ -38,6 +38,11 @@ class RecipeAPI {
       var recipeData = jsonDecode(response.body);
       List<Recipe> recipeList = <Recipe>[];
       for (var recipeJson in recipeData['results']) {
+        if (maxCalories.isNotEmpty &&
+            recipeJson['nutrition']['nutrients'][0]['amount'] >
+                double.parse(maxCalories)) {
+          continue;
+        }
         recipeList.add(Recipe.fromJson(recipeJson));
       }
       return recipeList;

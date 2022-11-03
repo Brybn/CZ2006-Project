@@ -69,9 +69,9 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
         ),
         actions: <Widget>[
           _filterButton(),
-          const FavoritedRestaurantsButton(),
         ],
       ),
+      bottomNavigationBar: _bottomBar(),
       body: _buildResults(),
     );
   }
@@ -142,5 +142,19 @@ class RestaurantResultsPageState extends State<RestaurantResultsPage> {
             restaurant.name.toLowerCase().contains(query.toLowerCase())));
       });
     }
+  }
+
+  Widget _bottomBar() {
+    return Ink(
+      color: Colors.white,
+      height: 55.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const <Widget>[
+          HomeButton(),
+          FavoritedRestaurantsButton(),
+        ],
+      ),
+    );
   }
 }

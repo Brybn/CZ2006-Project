@@ -52,6 +52,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadLocation());
+  }
+
+  void _loadLocation() {
     LocationAPI.getLocation()
         .then((location) => setState(() => _userLocation = location));
   }
@@ -62,7 +66,13 @@ class _RestaurantPageState extends State<RestaurantPage> {
       appBar: AppBar(
         backgroundColor: Colors.orange,
         title: const Text("Enter Your Preference"),
-        actions: const <Widget>[FavoritedRestaurantsButton()],
+        actions: <Widget>[
+          IconButton(
+            onPressed: () =>
+                Navigator.of(context).pushNamed('/FavoritedRestaurantsPage'),
+            icon: const Icon(Icons.star),
+          ),
+        ],
       ),
       body: ListView(
         children: [
